@@ -123,6 +123,10 @@ async function savePattern(pattern) {
     movieIds: pattern.movieIds,
     validated: null,
     firstDetected: now,
+    // New fields for improved pattern detection
+    element: pattern.element || null,
+    sentiment: pattern.sentiment || 'neutral',
+    contexts: pattern.contexts || [],
   });
 }
 
