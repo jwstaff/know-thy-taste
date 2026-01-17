@@ -25,29 +25,29 @@
     [x-cloak] { display: none !important; }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen" x-data="app()" x-init="init()" x-cloak>
+<body class="bg-gray-50 min-h-screen pb-20 md:pb-0" x-data="app()" x-init="init()" x-cloak>
 
-  <!-- Navigation -->
-  <nav class="bg-white shadow-sm border-b">
+  <!-- Desktop Navigation -->
+  <nav class="hidden md:block bg-white shadow-sm border-b sticky top-0 z-50">
     <div class="max-w-4xl mx-auto px-4">
       <div class="flex items-center justify-between h-16">
         <button @click="page = 'home'" class="text-xl font-semibold text-gray-800">
           Know Thy Taste
         </button>
-        <div class="flex space-x-4">
-          <button @click="page = 'home'" :class="page === 'home' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'" class="px-3 py-2 text-sm font-medium">
+        <div class="flex space-x-1">
+          <button @click="page = 'home'" :class="page === 'home' ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'" class="px-4 py-2 text-sm font-medium rounded-lg transition">
             Home
           </button>
-          <button @click="page = 'session'" :class="page === 'session' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'" class="px-3 py-2 text-sm font-medium">
+          <button @click="page = 'session'" :class="page === 'session' ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'" class="px-4 py-2 text-sm font-medium rounded-lg transition">
             Session
           </button>
-          <button @click="page = 'movies'" :class="page === 'movies' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'" class="px-3 py-2 text-sm font-medium">
+          <button @click="page = 'movies'" :class="page === 'movies' || page === 'add-movie' ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'" class="px-4 py-2 text-sm font-medium rounded-lg transition">
             Movies
           </button>
-          <button @click="page = 'patterns'" :class="page === 'patterns' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'" class="px-3 py-2 text-sm font-medium">
+          <button @click="page = 'patterns'" :class="page === 'patterns' ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'" class="px-4 py-2 text-sm font-medium rounded-lg transition">
             Patterns
           </button>
-          <button @click="page = 'settings'" :class="page === 'settings' ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'" class="px-3 py-2 text-sm font-medium">
+          <button @click="page = 'settings'" :class="page === 'settings' ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'" class="px-4 py-2 text-sm font-medium rounded-lg transition">
             Settings
           </button>
         </div>
@@ -55,8 +55,41 @@
     </div>
   </nav>
 
+  <!-- Mobile Header -->
+  <header class="md:hidden bg-white shadow-sm border-b sticky top-0 z-50">
+    <div class="px-4 h-14 flex items-center justify-center">
+      <h1 class="text-lg font-semibold text-gray-800">Know Thy Taste</h1>
+    </div>
+  </header>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-50 safe-area-pb">
+    <div class="grid grid-cols-5 h-16">
+      <button @click="page = 'home'" :class="page === 'home' ? 'text-indigo-600' : 'text-gray-500'" class="flex flex-col items-center justify-center gap-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="text-xs">Home</span>
+      </button>
+      <button @click="page = 'session'" :class="page === 'session' ? 'text-indigo-600' : 'text-gray-500'" class="flex flex-col items-center justify-center gap-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span class="text-xs">Session</span>
+      </button>
+      <button @click="page = 'movies'" :class="page === 'movies' || page === 'add-movie' ? 'text-indigo-600' : 'text-gray-500'" class="flex flex-col items-center justify-center gap-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+        <span class="text-xs">Movies</span>
+      </button>
+      <button @click="page = 'patterns'" :class="page === 'patterns' ? 'text-indigo-600' : 'text-gray-500'" class="flex flex-col items-center justify-center gap-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span class="text-xs">Patterns</span>
+      </button>
+      <button @click="page = 'settings'" :class="page === 'settings' ? 'text-indigo-600' : 'text-gray-500'" class="flex flex-col items-center justify-center gap-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span class="text-xs">Settings</span>
+      </button>
+    </div>
+  </nav>
+
   <!-- Main Content -->
-  <main class="max-w-4xl mx-auto px-4 py-8">
+  <main class="max-w-4xl mx-auto px-4 py-6 md:py-8">
 
     <!-- Loading -->
     <div x-show="loading" class="text-center py-12">
@@ -67,51 +100,51 @@
     <!-- Home Page -->
     <template x-if="!loading && page === 'home'">
       <div>
-        <div class="text-center mb-12">
-          <h1 class="text-4xl font-bold text-gray-900 mb-4">Know Thy Taste</h1>
-          <p class="text-xl text-gray-600">Discover why you love the movies you love</p>
+        <div class="text-center mb-8 md:mb-12">
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-4">Know Thy Taste</h1>
+          <p class="text-lg md:text-xl text-gray-600">Discover why you love the movies you love</p>
         </div>
 
         <!-- Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          <div class="bg-white rounded-lg shadow p-6 text-center">
-            <div class="text-3xl font-bold text-indigo-600" x-text="stats.movies"></div>
-            <div class="text-gray-600">Movies</div>
+        <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 mb-8 md:mb-12">
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 text-center">
+            <div class="text-2xl md:text-3xl font-bold text-indigo-600" x-text="stats.movies"></div>
+            <div class="text-sm md:text-base text-gray-600">Movies</div>
           </div>
-          <div class="bg-white rounded-lg shadow p-6 text-center">
-            <div class="text-3xl font-bold text-indigo-600" x-text="stats.sessions"></div>
-            <div class="text-gray-600">Sessions</div>
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 text-center">
+            <div class="text-2xl md:text-3xl font-bold text-indigo-600" x-text="stats.sessions"></div>
+            <div class="text-sm md:text-base text-gray-600">Sessions</div>
           </div>
-          <div class="bg-white rounded-lg shadow p-6 text-center">
-            <div class="text-3xl font-bold text-indigo-600" x-text="stats.responses"></div>
-            <div class="text-gray-600">Reflections</div>
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 text-center">
+            <div class="text-2xl md:text-3xl font-bold text-indigo-600" x-text="stats.responses"></div>
+            <div class="text-sm md:text-base text-gray-600">Reflections</div>
           </div>
-          <div class="bg-white rounded-lg shadow p-6 text-center">
-            <div class="text-3xl font-bold text-indigo-600" x-text="stats.patterns"></div>
-            <div class="text-gray-600">Patterns</div>
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 text-center">
+            <div class="text-2xl md:text-3xl font-bold text-indigo-600" x-text="stats.patterns"></div>
+            <div class="text-sm md:text-base text-gray-600">Patterns</div>
           </div>
         </div>
 
         <!-- Quick Actions -->
-        <div class="flex flex-col md:flex-row gap-4 justify-center">
-          <button @click="page = 'session'" class="bg-indigo-600 text-white px-8 py-4 rounded-lg text-lg font-medium hover:bg-indigo-700 transition">
+        <div class="flex flex-col gap-3 md:flex-row md:gap-4 md:justify-center">
+          <button @click="page = 'session'" class="bg-indigo-600 text-white px-6 py-4 rounded-xl text-base md:text-lg font-medium hover:bg-indigo-700 transition w-full md:w-auto">
             Start a Session
           </button>
-          <button @click="page = 'movies'" class="bg-white text-gray-700 px-8 py-4 rounded-lg text-lg font-medium border hover:bg-gray-50 transition">
+          <button @click="page = 'movies'" class="bg-white text-gray-700 px-6 py-4 rounded-xl text-base md:text-lg font-medium border hover:bg-gray-50 transition w-full md:w-auto">
             Manage Movies
           </button>
         </div>
 
         <!-- Recent Patterns -->
         <template x-if="patterns.length > 0">
-          <div class="mt-12">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Patterns</h2>
+          <div class="mt-8 md:mt-12">
+            <h2 class="text-lg md:text-xl font-semibold text-gray-900 mb-4">Recent Patterns</h2>
             <div class="space-y-3">
               <template x-for="pattern in patterns.slice(0, 3)" :key="pattern.id">
-                <div class="bg-white rounded-lg shadow p-4">
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-900" x-text="pattern.description"></span>
-                    <span class="text-sm text-gray-500" x-text="Math.round(pattern.confidence * 100) + '%'"></span>
+                <div class="bg-white rounded-xl shadow-sm p-4">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-gray-900 text-sm md:text-base" x-text="pattern.description"></span>
+                    <span class="text-sm text-gray-500 shrink-0" x-text="Math.round(pattern.confidence * 100) + '%'"></span>
                   </div>
                 </div>
               </template>
@@ -128,14 +161,14 @@
     <template x-if="!loading && page === 'movies'">
       <div>
         <div class="flex items-center justify-between mb-6">
-          <h1 class="text-2xl font-bold text-gray-900">Your Movies</h1>
-          <button @click="page = 'add-movie'" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+          <h1 class="text-xl md:text-2xl font-bold text-gray-900">Your Movies</h1>
+          <button @click="page = 'add-movie'" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm md:text-base hover:bg-indigo-700 transition">
             Add Movie
           </button>
         </div>
 
         <template x-if="movies.length === 0">
-          <div class="text-center py-12 bg-white rounded-lg shadow">
+          <div class="text-center py-12 bg-white rounded-xl shadow-sm">
             <p class="text-gray-600 mb-4">No movies yet</p>
             <button @click="page = 'add-movie'" class="text-indigo-600 hover:text-indigo-700 font-medium">
               Add your first movie
@@ -145,24 +178,28 @@
 
         <div class="space-y-3">
           <template x-for="movie in movies" :key="movie.id">
-            <div class="bg-white rounded-lg shadow p-4 flex items-center gap-4">
+            <div class="bg-white rounded-xl shadow-sm p-3 md:p-4 flex items-center gap-3 md:gap-4">
               <!-- Poster -->
               <template x-if="movie.posterPath">
-                <img :src="'https://image.tmdb.org/t/p/w92' + movie.posterPath" class="w-12 h-18 object-cover rounded shadow" :alt="movie.title">
+                <img :src="'https://image.tmdb.org/t/p/w92' + movie.posterPath" class="w-12 h-18 object-cover rounded-lg shadow" :alt="movie.title">
               </template>
               <template x-if="!movie.posterPath">
-                <div class="w-12 h-18 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs shrink-0">No poster</div>
+                <div class="w-12 h-18 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 shrink-0">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+                </div>
               </template>
               <!-- Info -->
               <div class="flex-1 min-w-0">
-                <span class="font-medium text-gray-900" x-text="movie.title"></span>
-                <span class="text-gray-500 ml-2" x-text="movie.year ? '(' + movie.year + ')' : ''"></span>
-                <template x-if="movie.lastAnalyzed">
-                  <span class="ml-3 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Analyzed</span>
-                </template>
+                <div class="font-medium text-gray-900 truncate" x-text="movie.title"></div>
+                <div class="text-sm text-gray-500 flex items-center gap-2 flex-wrap">
+                  <span x-text="movie.year || ''"></span>
+                  <template x-if="movie.lastAnalyzed">
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Analyzed</span>
+                  </template>
+                </div>
               </div>
-              <button @click="deleteMovieHandler(movie.id).then(() => refreshAll())" class="text-red-600 hover:text-red-700 text-sm shrink-0">
-                Delete
+              <button @click="deleteMovieHandler(movie.id).then(() => refreshAll())" class="text-gray-400 hover:text-red-600 p-2 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
               </button>
             </div>
           </template>
@@ -173,41 +210,46 @@
     <!-- Add Movie Page -->
     <template x-if="!loading && page === 'add-movie'">
       <div x-data="addMovieForm()" x-init="init()">
-        <button @click="appState.page = 'movies'" class="text-gray-600 hover:text-gray-900 mb-4 flex items-center">
-          ← Back to Movies
+        <button @click="appState.page = 'movies'" class="text-gray-600 hover:text-gray-900 mb-4 flex items-center text-sm">
+          <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Back to Movies
         </button>
 
-        <h1 class="text-2xl font-bold text-gray-900 mb-6">Add a Movie</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Add a Movie</h1>
 
-        <div class="bg-white rounded-lg shadow p-6 max-w-lg">
+        <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
           <template x-if="error">
-            <div class="mb-4 p-3 bg-red-100 text-red-700 rounded" x-text="error"></div>
+            <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm" x-text="error"></div>
           </template>
 
           <!-- Selected movie preview -->
           <template x-if="selectedMovie">
-            <div class="mb-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg flex items-center gap-3">
-              <img x-show="selectedMovie.posterUrl" :src="selectedMovie.posterUrl" class="w-12 h-18 object-cover rounded" :alt="selectedMovie.title">
-              <div class="flex-1">
-                <div class="font-medium text-gray-900" x-text="selectedMovie.title"></div>
+            <div class="mb-4 p-3 bg-indigo-50 border border-indigo-200 rounded-xl flex items-center gap-3">
+              <img x-show="selectedMovie.posterUrl" :src="selectedMovie.posterUrl" class="w-12 h-18 object-cover rounded-lg" :alt="selectedMovie.title">
+              <div class="flex-1 min-w-0">
+                <div class="font-medium text-gray-900 truncate" x-text="selectedMovie.title"></div>
                 <div class="text-sm text-gray-500" x-text="selectedMovie.year"></div>
               </div>
-              <button @click="clearSelection()" class="text-gray-400 hover:text-gray-600">✕</button>
+              <button @click="clearSelection()" class="text-gray-400 hover:text-gray-600 p-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
             </div>
           </template>
 
           <div class="space-y-4">
             <div class="relative">
               <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-              <input type="text" x-model="title" @input="searchTmdb()" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Blade Runner">
+              <input type="text" x-model="title" @input="searchTmdb()" class="w-full border border-gray-300 rounded-lg px-3 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base" placeholder="e.g., Blade Runner">
 
               <!-- Search results dropdown -->
               <template x-if="searchResults.length > 0 && !selectedMovie">
-                <div class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-80 overflow-y-auto">
+                <div class="absolute z-10 w-full mt-1 bg-white border rounded-xl shadow-lg max-h-64 overflow-y-auto">
                   <template x-for="movie in searchResults" :key="movie.tmdbId">
-                    <button @click="selectSearchResult(movie)" class="w-full p-2 flex items-center gap-3 hover:bg-gray-50 border-b last:border-b-0 text-left">
+                    <button @click="selectSearchResult(movie)" class="w-full p-3 flex items-center gap-3 hover:bg-gray-50 border-b last:border-b-0 text-left">
                       <img x-show="movie.posterUrl" :src="movie.posterUrl" class="w-10 h-15 object-cover rounded" :alt="movie.title">
-                      <div x-show="!movie.posterUrl" class="w-10 h-15 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">No img</div>
+                      <div x-show="!movie.posterUrl" class="w-10 h-15 bg-gray-200 rounded flex items-center justify-center text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+                      </div>
                       <div class="flex-1 min-w-0">
                         <div class="font-medium text-gray-900 truncate" x-text="movie.title"></div>
                         <div class="text-sm text-gray-500" x-text="movie.year || 'Unknown year'"></div>
@@ -219,7 +261,7 @@
 
               <!-- Searching indicator -->
               <template x-if="searching">
-                <div class="absolute right-3 top-8 text-gray-400">
+                <div class="absolute right-3 top-9 text-gray-400">
                   <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -230,17 +272,17 @@
 
             <!-- No API key hint -->
             <template x-if="!hasApiKey && title.length > 2 && !selectedMovie">
-              <p class="text-sm text-gray-500">Add your TMDB API key in Settings to see movie posters and search suggestions.</p>
+              <p class="text-sm text-gray-500">Add your TMDB API key in Settings to see movie posters.</p>
             </template>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Year (optional)</label>
-              <input type="number" x-model="year" @input="searchTmdb()" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 1982">
+              <input type="number" x-model="year" @input="searchTmdb()" class="w-full border border-gray-300 rounded-lg px-3 py-3 focus:ring-2 focus:ring-indigo-500 text-base" placeholder="e.g., 1982">
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Where did you watch it?</label>
-              <select x-model="watchContext" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+              <select x-model="watchContext" class="w-full border border-gray-300 rounded-lg px-3 py-3 focus:ring-2 focus:ring-indigo-500 text-base bg-white">
                 <option value="home">Home (streaming/disc)</option>
                 <option value="theater">Theater</option>
                 <option value="travel">Flight / Travel</option>
@@ -248,7 +290,7 @@
               </select>
             </div>
 
-            <button @click="save()" :disabled="saving" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50">
+            <button @click="save()" :disabled="saving" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 text-base">
               <span x-show="!saving">Add Movie</span>
               <span x-show="saving">Saving...</span>
             </button>
@@ -264,24 +306,24 @@
         <!-- Step: Select Type -->
         <template x-if="step === 'select-type'">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">Start a Session</h1>
-            <p class="text-gray-600 mb-8">Choose a session type:</p>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-2">Start a Session</h1>
+            <p class="text-gray-600 mb-6">Choose a session type:</p>
 
-            <div class="grid gap-4 md:grid-cols-3">
-              <button @click="selectType('deep-dive')" class="bg-white rounded-lg shadow p-6 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500">
-                <h3 class="font-semibold text-gray-900 mb-2">Deep Dive</h3>
+            <div class="space-y-3 md:space-y-0 md:grid md:gap-4 md:grid-cols-3">
+              <button @click="selectType('deep-dive')" class="w-full bg-white rounded-xl shadow-sm p-5 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500">
+                <h3 class="font-semibold text-gray-900 mb-1">Deep Dive</h3>
                 <p class="text-sm text-gray-600">Intensive analysis of 1-2 films. Explore every facet of your response.</p>
                 <span class="text-xs text-gray-400 mt-2 block">30-45 min</span>
               </button>
 
-              <button @click="selectType('pattern-hunt')" class="bg-white rounded-lg shadow p-6 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500">
-                <h3 class="font-semibold text-gray-900 mb-2">Pattern Hunt</h3>
+              <button @click="selectType('pattern-hunt')" class="w-full bg-white rounded-xl shadow-sm p-5 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500">
+                <h3 class="font-semibold text-gray-900 mb-1">Pattern Hunt</h3>
                 <p class="text-sm text-gray-600">Compare similar films to find what differentiates them for you.</p>
                 <span class="text-xs text-gray-400 mt-2 block">20-30 min</span>
               </button>
 
-              <button @click="selectType('temporal')" class="bg-white rounded-lg shadow p-6 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500">
-                <h3 class="font-semibold text-gray-900 mb-2">Temporal</h3>
+              <button @click="selectType('temporal')" class="w-full bg-white rounded-xl shadow-sm p-5 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500">
+                <h3 class="font-semibold text-gray-900 mb-1">Temporal</h3>
                 <p class="text-sm text-gray-600">Explore how your reaction to a rewatched film has changed.</p>
                 <span class="text-xs text-gray-400 mt-2 block">15-20 min</span>
               </button>
@@ -292,14 +334,15 @@
         <!-- Step: Select Movie -->
         <template x-if="step === 'select-movie'">
           <div>
-            <button @click="step = 'select-type'" class="text-gray-600 hover:text-gray-900 mb-4 flex items-center">
-              ← Back
+            <button @click="step = 'select-type'" class="text-gray-600 hover:text-gray-900 mb-4 flex items-center text-sm">
+              <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              Back
             </button>
 
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">Select a Movie</h1>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Select a Movie</h1>
 
             <template x-if="appState.movies.length === 0">
-              <div class="text-center py-12 bg-white rounded-lg shadow">
+              <div class="text-center py-12 bg-white rounded-xl shadow-sm">
                 <p class="text-gray-600 mb-4">You need to add a movie first</p>
                 <button @click="appState.page = 'add-movie'" class="text-indigo-600 hover:text-indigo-700 font-medium">
                   Add a movie
@@ -309,16 +352,18 @@
 
             <div class="space-y-3">
               <template x-for="movie in appState.movies" :key="movie.id">
-                <button @click="selectMovie(movie.id)" class="w-full bg-white rounded-lg shadow p-4 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500 flex items-center gap-4">
+                <button @click="selectMovie(movie.id)" class="w-full bg-white rounded-xl shadow-sm p-3 md:p-4 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500 flex items-center gap-3 md:gap-4">
                   <template x-if="movie.posterPath">
-                    <img :src="'https://image.tmdb.org/t/p/w92' + movie.posterPath" class="w-12 h-18 object-cover rounded shadow" :alt="movie.title">
+                    <img :src="'https://image.tmdb.org/t/p/w92' + movie.posterPath" class="w-12 h-18 object-cover rounded-lg shadow" :alt="movie.title">
                   </template>
                   <template x-if="!movie.posterPath">
-                    <div class="w-12 h-18 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs shrink-0">No poster</div>
+                    <div class="w-12 h-18 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 shrink-0">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+                    </div>
                   </template>
-                  <div>
-                    <span class="font-medium text-gray-900" x-text="movie.title"></span>
-                    <span class="text-gray-500 ml-2" x-text="movie.year ? '(' + movie.year + ')' : ''"></span>
+                  <div class="min-w-0">
+                    <div class="font-medium text-gray-900 truncate" x-text="movie.title"></div>
+                    <div class="text-sm text-gray-500" x-text="movie.year || ''"></div>
                   </div>
                 </button>
               </template>
@@ -330,7 +375,7 @@
         <template x-if="step === 'questioning'">
           <div>
             <!-- Progress -->
-            <div class="mb-8">
+            <div class="mb-6">
               <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
                 <span x-text="phaseInfo.name"></span>
                 <span x-text="progress + '%'"></span>
@@ -338,25 +383,25 @@
               <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div class="h-full bg-indigo-600 transition-all duration-300" :style="'width: ' + progress + '%'"></div>
               </div>
-              <p class="text-sm text-gray-500 mt-2" x-text="phaseInfo.description"></p>
+              <p class="text-xs md:text-sm text-gray-500 mt-2" x-text="phaseInfo.description"></p>
             </div>
 
             <!-- Movie context -->
-            <div class="text-center mb-6">
-              <span class="text-gray-500">Analyzing:</span>
-              <span class="font-medium text-gray-900 ml-2" x-text="selectedMovie?.title"></span>
+            <div class="text-center mb-4">
+              <span class="text-sm text-gray-500">Analyzing:</span>
+              <span class="font-medium text-gray-900 ml-1" x-text="selectedMovie?.title"></span>
             </div>
 
             <!-- Metacognitive prompt -->
             <template x-if="metacognitivePrompt">
-              <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+              <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
                 <p class="text-sm text-indigo-700 italic" x-text="metacognitivePrompt"></p>
               </div>
             </template>
 
             <!-- Question -->
-            <div class="bg-white rounded-lg shadow p-6 mb-6">
-              <h2 class="text-xl font-medium text-gray-900 mb-4" x-text="formattedQuestion"></h2>
+            <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
+              <h2 class="text-lg md:text-xl font-medium text-gray-900 mb-4" x-text="formattedQuestion"></h2>
 
               <template x-if="currentQuestion?.hint">
                 <p class="text-sm text-gray-500 mb-4" x-text="currentQuestion.hint"></p>
@@ -364,7 +409,7 @@
 
               <!-- Feedback -->
               <template x-if="feedbackMessage">
-                <div class="mb-4 p-3 rounded" :class="{
+                <div class="mb-4 p-3 rounded-lg text-sm" :class="{
                   'bg-green-100 text-green-700': feedbackType === 'success',
                   'bg-yellow-100 text-yellow-700': feedbackType === 'warning',
                   'bg-blue-100 text-blue-700': feedbackType === 'info'
@@ -374,9 +419,9 @@
               <!-- Response textarea -->
               <template x-if="!showConfidence">
                 <div>
-                  <textarea x-model="response" rows="5" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Take your time. Be specific."></textarea>
+                  <textarea x-model="response" rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base" placeholder="Take your time. Be specific."></textarea>
                   <div class="flex justify-end mt-4">
-                    <button @click="submitResponse()" :disabled="!response.trim()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50">
+                    <button @click="submitResponse()" :disabled="!response.trim()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 w-full md:w-auto">
                       Continue
                     </button>
                   </div>
@@ -386,20 +431,18 @@
               <!-- Confidence selector -->
               <template x-if="showConfidence">
                 <div>
-                  <p class="text-gray-700 mb-4">How confident are you in this response?</p>
+                  <p class="text-gray-700 mb-4 text-sm md:text-base">How confident are you in this response?</p>
                   <div class="space-y-2 mb-6">
                     <template x-for="[level, desc] in Object.entries(CONFIDENCE_SCALE)" :key="level">
-                      <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50" :class="{'border-indigo-500 bg-indigo-50': confidence == level}">
+                      <label class="flex items-center p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition" :class="{'border-indigo-500 bg-indigo-50': confidence == level}">
                         <input type="radio" x-model="confidence" :value="parseInt(level)" class="mr-3">
                         <span class="text-sm"><strong x-text="level"></strong> - <span x-text="desc"></span></span>
                       </label>
                     </template>
                   </div>
-                  <div class="flex justify-end">
-                    <button @click="saveAndNext()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition">
-                      Next Question
-                    </button>
-                  </div>
+                  <button @click="saveAndNext()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition w-full md:w-auto">
+                    Next Question
+                  </button>
                 </div>
               </template>
             </div>
@@ -408,16 +451,16 @@
 
         <!-- Step: Complete -->
         <template x-if="step === 'complete'">
-          <div class="text-center py-12">
-            <div class="text-6xl mb-4">✓</div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-4">Session Complete!</h1>
+          <div class="text-center py-8 md:py-12">
+            <div class="text-5xl md:text-6xl mb-4">✓</div>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Session Complete!</h1>
             <p class="text-gray-600 mb-8">You captured <span x-text="sessionResponses.length" class="font-semibold"></span> reflections.</p>
 
-            <div class="space-y-4">
-              <button @click="appState.page = 'patterns'" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition">
+            <div class="space-y-3 max-w-xs mx-auto">
+              <button @click="appState.page = 'patterns'" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-indigo-700 transition">
                 View Patterns
               </button>
-              <button @click="startNewSession()" class="block mx-auto text-indigo-600 hover:text-indigo-700 font-medium">
+              <button @click="startNewSession()" class="w-full text-indigo-600 hover:text-indigo-700 font-medium py-2">
                 Start Another Session
               </button>
             </div>
@@ -430,45 +473,41 @@
     <!-- Patterns Page -->
     <template x-if="!loading && page === 'patterns'">
       <div x-data="patternList()">
-        <h1 class="text-2xl font-bold text-gray-900 mb-6">Detected Patterns</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Detected Patterns</h1>
 
         <template x-if="patterns.length === 0">
-          <div class="text-center py-12 bg-white rounded-lg shadow">
+          <div class="text-center py-12 bg-white rounded-xl shadow-sm">
             <p class="text-gray-600 mb-4">No patterns detected yet</p>
             <p class="text-sm text-gray-500">Complete a few sessions to discover patterns in your taste.</p>
           </div>
         </template>
 
-        <div class="space-y-4">
+        <div class="space-y-3">
           <template x-for="pattern in patterns" :key="pattern.id">
-            <div class="bg-white rounded-lg shadow p-6">
-              <div class="flex items-start justify-between">
-                <div>
-                  <span class="text-xs uppercase tracking-wide text-gray-500" x-text="pattern.type"></span>
-                  <h3 class="text-lg font-medium text-gray-900 mt-1" x-text="pattern.description"></h3>
-                  <div class="mt-2">
-                    <span class="text-sm text-gray-500">Confidence:</span>
-                    <span class="text-sm font-medium ml-1" x-text="Math.round(pattern.confidence * 100) + '%'"></span>
-                  </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
+              <div class="mb-3">
+                <span class="text-xs uppercase tracking-wide text-gray-500" x-text="pattern.type"></span>
+                <h3 class="text-base md:text-lg font-medium text-gray-900 mt-1" x-text="pattern.description"></h3>
+                <div class="mt-1">
+                  <span class="text-sm text-gray-500">Confidence:</span>
+                  <span class="text-sm font-medium ml-1" x-text="Math.round(pattern.confidence * 100) + '%'"></span>
                 </div>
-                <div class="flex space-x-2">
-                  <template x-if="pattern.validated === null">
-                    <div class="flex space-x-2">
-                      <button @click="validate(pattern.id, true)" class="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200">
-                        Yes, this fits
-                      </button>
-                      <button @click="validate(pattern.id, false)" class="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200">
-                        Not quite
-                      </button>
-                    </div>
-                  </template>
-                  <template x-if="pattern.validated === true">
-                    <span class="px-3 py-1 text-sm bg-green-100 text-green-700 rounded">Confirmed</span>
-                  </template>
-                  <template x-if="pattern.validated === false">
-                    <span class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded">Reconsidering...</span>
-                  </template>
-                </div>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <template x-if="pattern.validated === null">
+                  <button @click="validate(pattern.id, true)" class="flex-1 md:flex-none px-4 py-2 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition">
+                    Yes, this fits
+                  </button>
+                  <button @click="validate(pattern.id, false)" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition">
+                    Not quite
+                  </button>
+                </template>
+                <template x-if="pattern.validated === true">
+                  <span class="px-4 py-2 text-sm bg-green-100 text-green-700 rounded-lg">Confirmed</span>
+                </template>
+                <template x-if="pattern.validated === false">
+                  <span class="px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-lg">Reconsidering...</span>
+                </template>
               </div>
             </div>
           </template>
@@ -479,30 +518,30 @@
     <!-- Settings Page -->
     <template x-if="!loading && page === 'settings'">
       <div x-data="settingsPanel()" x-init="init()">
-        <h1 class="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-900 mb-6">Settings</h1>
 
         <template x-if="message">
-          <div class="mb-6 p-4 rounded-lg" :class="{
+          <div class="mb-4 p-4 rounded-xl text-sm" :class="{
             'bg-green-100 text-green-700': messageType === 'success',
             'bg-red-100 text-red-700': messageType === 'error',
             'bg-blue-100 text-blue-700': messageType === 'info'
           }" x-text="message"></div>
         </template>
 
-        <div class="bg-white rounded-lg shadow divide-y">
+        <div class="space-y-4">
           <!-- TMDB API Key -->
-          <div class="p-6">
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
             <h3 class="font-medium text-gray-900 mb-2">TMDB API Key</h3>
-            <p class="text-sm text-gray-600 mb-4">Add your free TMDB API key to enable movie posters and search. Get one at <a href="https://www.themoviedb.org/settings/api" target="_blank" class="text-indigo-600 hover:underline">themoviedb.org</a></p>
-            <div class="flex gap-2">
+            <p class="text-sm text-gray-600 mb-4">Add your free TMDB API key to enable movie posters. Get one at <a href="https://www.themoviedb.org/settings/api" target="_blank" class="text-indigo-600 hover:underline">themoviedb.org</a></p>
+            <div class="space-y-3 md:space-y-0 md:flex md:gap-2">
               <div class="relative flex-1">
-                <input :type="tmdbKeyVisible ? 'text' : 'password'" x-model="tmdbApiKey" class="w-full border rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-indigo-500" placeholder="Enter your API key">
-                <button @click="tmdbKeyVisible = !tmdbKeyVisible" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <input :type="tmdbKeyVisible ? 'text' : 'password'" x-model="tmdbApiKey" class="w-full border border-gray-300 rounded-lg px-3 py-3 pr-16 focus:ring-2 focus:ring-indigo-500 text-base" placeholder="Enter your API key">
+                <button @click="tmdbKeyVisible = !tmdbKeyVisible" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm">
                   <span x-show="!tmdbKeyVisible">Show</span>
                   <span x-show="tmdbKeyVisible">Hide</span>
                 </button>
               </div>
-              <button @click="saveTmdbKey()" :disabled="savingKey" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
+              <button @click="saveTmdbKey()" :disabled="savingKey" class="w-full md:w-auto bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
                 <span x-show="!savingKey">Save</span>
                 <span x-show="savingKey">Saving...</span>
               </button>
@@ -510,27 +549,27 @@
           </div>
 
           <!-- Export -->
-          <div class="p-6">
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
             <h3 class="font-medium text-gray-900 mb-2">Export Data</h3>
             <p class="text-sm text-gray-600 mb-4">Download all your data as a JSON file for backup.</p>
-            <button @click="exportData()" :disabled="exporting" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
+            <button @click="exportData()" :disabled="exporting" class="w-full md:w-auto bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
               <span x-show="!exporting">Export Data</span>
               <span x-show="exporting">Exporting...</span>
             </button>
           </div>
 
           <!-- Import -->
-          <div class="p-6">
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
             <h3 class="font-medium text-gray-900 mb-2">Import Data</h3>
             <p class="text-sm text-gray-600 mb-4">Restore from a backup file. This will replace all current data.</p>
-            <input type="file" accept=".json" @change="handleImport($event)" class="text-sm text-gray-600">
+            <input type="file" accept=".json" @change="handleImport($event)" class="text-sm text-gray-600 w-full">
           </div>
 
           <!-- Delete -->
-          <div class="p-6">
+          <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
             <h3 class="font-medium text-red-600 mb-2">Delete All Data</h3>
             <p class="text-sm text-gray-600 mb-4">Permanently delete all your data. This cannot be undone.</p>
-            <button @click="clearData()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+            <button @click="clearData()" class="w-full md:w-auto bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition">
               Delete All Data
             </button>
           </div>
@@ -544,11 +583,6 @@
     </template>
 
   </main>
-
-  <!-- Footer -->
-  <footer class="max-w-4xl mx-auto px-4 py-8 text-center text-sm text-gray-500">
-    <p>Know Thy Taste — All data stored locally in your browser</p>
-  </footer>
 
 </body>
 </html>
