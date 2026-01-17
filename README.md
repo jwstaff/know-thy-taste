@@ -1,37 +1,77 @@
 # Know Thy Taste
 
-A command-line application for metacognitive exploration of your movie preferences. Discover not just *what* you like, but *why*—and develop a richer vocabulary for your own taste.
+A local-first app that helps you discover *why* you love the movies you love. Through guided reflection sessions, the app detects patterns in your taste and builds a personalized profile of your preferences.
 
-## Philosophy
-
-This isn't just about cataloging movies. It's about helping you understand why you respond to certain films, recognize patterns in your preferences, and develop deeper self-awareness about your taste through structured reflection.
+**Live Web App:** https://know-thy-taste.vercel.app
 
 ## Features
 
-- **Scaffolded Questioning**: Three-phase analysis (Planning, Monitoring, Evaluation) based on metacognitive research
-- **Anti-Generic Detection**: The app pushes for specificity—"good acting" isn't enough
-- **Pattern Recognition**: Discovers themes and elements that consistently resonate with you
-- **Privacy-First**: All data encrypted locally; nothing leaves your machine
-- **Adaptive Scaffolding**: Guidance fades as you develop your reflection skills
+- **Guided Sessions** - Answer thoughtful questions about films you've watched
+- **Anti-Generic Detection** - Prompts you to be specific when responses are vague
+- **Pattern Detection** - Identifies recurring themes, technical preferences, and emotional responses
+- **Sentiment Analysis** - Distinguishes between elements you love vs. criticize
+- **Local-First** - All data stored locally. Nothing sent to servers.
+- **TMDB Integration** - Optional movie poster lookup with your own API key
+- **Export/Import** - Backup and restore your data as JSON
 
-## Installation
+---
+
+## Web App
+
+### Use the Live App
+
+Just visit https://know-thy-taste.vercel.app — no setup required.
+
+### Run Locally
+
+```bash
+# Clone the repo
+git clone https://github.com/jwstaff/know-thy-taste.git
+cd know-thy-taste
+
+# Serve the public folder (any static server works)
+python3 -m http.server 8000
+
+# Open in browser
+open http://localhost:8000/public/
+```
+
+### Usage
+
+1. **Add Movies** - Go to Movies → Add Movie. Enter titles of films you've seen.
+2. **Start a Session** - Choose a session type:
+   - **Deep Dive** - Intensive analysis of one film
+   - **Pattern Hunt** - Compare elements across films
+   - **Temporal** - Explore how your reaction has changed over time
+3. **Answer Questions** - Be specific! The app will prompt you if responses are too vague.
+4. **View Patterns** - After 2+ sessions, check the Patterns tab to see detected patterns.
+5. **Validate Patterns** - Confirm or reject patterns to improve accuracy.
+
+### TMDB Movie Posters (Optional)
+
+1. Get a free API key from [themoviedb.org](https://www.themoviedb.org/settings/api)
+2. Go to Settings in the app
+3. Paste your API key and save
+
+---
+
+## CLI (Command Line)
+
+### Installation
 
 ```bash
 # Clone the repository
-git clone <repo-url>
+git clone https://github.com/jwstaff/know-thy-taste.git
 cd know-thy-taste
 
 # Install with pip
 pip install -e .
-
-# Or with uv
-uv pip install -e .
 ```
 
-## Quick Start
+### Quick Start
 
 ```bash
-# First-time setup (privacy policy, passphrase, consent)
+# First-time setup
 ktt init
 
 # Start a discovery session
@@ -47,99 +87,95 @@ ktt patterns show
 ktt export --format markdown
 ```
 
-## Commands
-
-### Core Commands
+### Commands
 
 | Command | Description |
 |---------|-------------|
 | `ktt init` | First-time setup |
-| `ktt profile` | View your taste profile summary |
-| `ktt export` | Export data (JSON or Markdown) |
-
-### Session Commands
-
-| Command | Description |
-|---------|-------------|
 | `ktt session start` | Start a new discovery session |
 | `ktt session start --type deep-dive` | Intensive analysis of 1-2 films |
 | `ktt session start --type pattern-hunt` | Compare 3-4 similar films |
-| `ktt session start --type temporal` | Explore how your reaction changed over time |
-| `ktt session resume` | Resume a paused session |
-
-### Movie Commands
-
-| Command | Description |
-|---------|-------------|
 | `ktt movies add` | Add a movie to your collection |
 | `ktt movies list` | List all your movies |
-
-### Pattern Commands
-
-| Command | Description |
-|---------|-------------|
 | `ktt patterns show` | View detected patterns |
-| `ktt patterns validate <id>` | Confirm or reject a pattern |
+| `ktt profile` | View your taste profile summary |
+| `ktt export` | Export data (JSON or Markdown) |
 
-### Privacy Commands
+---
 
-| Command | Description |
-|---------|-------------|
-| `ktt privacy review` | Review your privacy settings |
-| `ktt privacy withdraw <type>` | Withdraw a specific consent |
-| `ktt privacy delete-all` | Permanently delete all data |
+## Pattern Detection
 
-## Session Types
+The app detects patterns across several categories:
 
-### Deep Dive (30-45 min)
-Intensive analysis of one or two films. Explore every facet of your response: what you noticed, how you engaged, and why it mattered.
+| Category | Examples |
+|----------|----------|
+| **Technical** | Cinematography, lighting, color, editing, sound design |
+| **Structural** | Pacing, narrative structure |
+| **Performance** | Acting, facial expressions, subtlety |
+| **Writing** | Dialogue, story, character development |
+| **Emotional** | Tension, catharsis, humor |
+| **Thematic** | Loss, love, identity, isolation, family, mortality |
+| **Preferences** | Slow pacing, ambiguous endings, visual storytelling |
 
-### Pattern Hunt (20-30 min)
-Compare 3-4 similar films to find what differentiates them for you. Why did you love one but only like another?
+Patterns include sentiment analysis — the app knows the difference between "the cinematography was stunning" and "the cinematography was distracting."
 
-### Temporal (15-20 min)
-Explore how your relationship with a rewatched film has changed. What's different now?
+---
 
-## Privacy & Security
+## Data Privacy
 
-- **Local-first**: All data stored on your machine
-- **Encrypted**: Reflections encrypted with AES-256
-- **No telemetry**: Nothing sent anywhere
-- **Your key**: Encryption derived from your passphrase
-- **Full control**: Export or delete anytime
+- **Web App**: Data stored in browser's IndexedDB
+- **CLI**: Data encrypted locally with AES-256
+- Nothing is sent to any server
+- Export/backup your data anytime
+- Full control to delete all data
 
-## Optional: TMDB Integration
+---
 
-Auto-fetch movie metadata by setting up a free TMDB API key:
+## Testing
 
-```bash
-# Set via environment variable
-export TMDB_API_KEY=your_key_here
-
-# Or the app will prompt during movie addition
-```
-
-Get a free API key at: https://www.themoviedb.org/settings/api
-
-## Development
+Run the end-to-end quality test:
 
 ```bash
-# Install dev dependencies
-pip install -e ".[dev]"
-
-# Run tests
-pytest
-
-# Run with coverage
-pytest --cov=ktt
+node test-quality.js
 ```
 
-## Data Location
+---
 
-Your data is stored in:
-- **macOS**: `~/Library/Application Support/know-thy-taste/`
-- **Linux**: `~/.local/share/know-thy-taste/`
-- **Windows**: `%LOCALAPPDATA%/know-thy-taste/`
+## Project Structure
+
+```
+know-thy-taste/
+├── public/                 # Static web app
+│   ├── index.html          # Main SPA
+│   └── js/
+│       ├── app.js          # Alpine.js components
+│       ├── db.js           # IndexedDB wrapper (Dexie)
+│       ├── analysis.js     # Pattern detection & sentiment
+│       ├── questions.js    # Question bank
+│       └── tmdb.js         # TMDB API integration
+├── src/ktt/                # Python CLI package
+│   ├── cli/                # Typer CLI commands
+│   ├── core/               # Core logic
+│   └── web/                # FastAPI server
+├── test-quality.js         # E2E test script
+└── vercel.json             # Deployment config
+```
+
+---
+
+## Tech Stack
+
+**Web App:**
+- Alpine.js, Tailwind CSS
+- IndexedDB via Dexie.js
+- Vercel (static hosting)
+
+**CLI:**
+- Python, Typer
+- SQLAlchemy, SQLite
+- AES-256 encryption
+
+---
 
 ## License
 
