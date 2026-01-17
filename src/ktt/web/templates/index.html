@@ -15,10 +15,11 @@
   <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.js"></script>
 
   <!-- App scripts -->
-  <script src="/static/js/db.js?v=2"></script>
-  <script src="/static/js/questions.js?v=2"></script>
-  <script src="/static/js/analysis.js?v=2"></script>
-  <script src="/static/js/app.js?v=2"></script>
+  <script src="/static/js/db.js"></script>
+  <script src="/static/js/tmdb.js"></script>
+  <script src="/static/js/questions.js"></script>
+  <script src="/static/js/analysis.js"></script>
+  <script src="/static/js/app.js"></script>
 
   <style>
     [x-cloak] { display: none !important; }
@@ -116,7 +117,7 @@
               </template>
             </div>
             <button @click="page = 'patterns'" class="mt-4 text-indigo-600 hover:text-indigo-700 text-sm font-medium">
-              View all patterns →
+              View all patterns
             </button>
           </div>
         </template>
@@ -144,15 +145,23 @@
 
         <div class="space-y-3">
           <template x-for="movie in movies" :key="movie.id">
-            <div class="bg-white rounded-lg shadow p-4 flex items-center justify-between">
-              <div>
+            <div class="bg-white rounded-lg shadow p-4 flex items-center gap-4">
+              <!-- Poster -->
+              <template x-if="movie.posterPath">
+                <img :src="'https://image.tmdb.org/t/p/w92' + movie.posterPath" class="w-12 h-18 object-cover rounded shadow" :alt="movie.title">
+              </template>
+              <template x-if="!movie.posterPath">
+                <div class="w-12 h-18 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs shrink-0">No poster</div>
+              </template>
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
                 <span class="font-medium text-gray-900" x-text="movie.title"></span>
                 <span class="text-gray-500 ml-2" x-text="movie.year ? '(' + movie.year + ')' : ''"></span>
                 <template x-if="movie.lastAnalyzed">
                   <span class="ml-3 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Analyzed</span>
                 </template>
               </div>
-              <button @click="deleteMovieHandler(movie.id).then(() => refreshAll())" class="text-red-600 hover:text-red-700 text-sm">
+              <button @click="deleteMovieHandler(movie.id).then(() => refreshAll())" class="text-red-600 hover:text-red-700 text-sm shrink-0">
                 Delete
               </button>
             </div>
@@ -163,7 +172,7 @@
 
     <!-- Add Movie Page -->
     <template x-if="!loading && page === 'add-movie'">
-      <div x-data="addMovieForm()">
+      <div x-data="addMovieForm()" x-init="init()">
         <button @click="appState.page = 'movies'" class="text-gray-600 hover:text-gray-900 mb-4 flex items-center">
           ← Back to Movies
         </button>
@@ -175,15 +184,58 @@
             <div class="mb-4 p-3 bg-red-100 text-red-700 rounded" x-text="error"></div>
           </template>
 
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-              <input type="text" x-model="title" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Blade Runner">
+          <!-- Selected movie preview -->
+          <template x-if="selectedMovie">
+            <div class="mb-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg flex items-center gap-3">
+              <img x-show="selectedMovie.posterUrl" :src="selectedMovie.posterUrl" class="w-12 h-18 object-cover rounded" :alt="selectedMovie.title">
+              <div class="flex-1">
+                <div class="font-medium text-gray-900" x-text="selectedMovie.title"></div>
+                <div class="text-sm text-gray-500" x-text="selectedMovie.year"></div>
+              </div>
+              <button @click="clearSelection()" class="text-gray-400 hover:text-gray-600">✕</button>
             </div>
+          </template>
+
+          <div class="space-y-4">
+            <div class="relative">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+              <input type="text" x-model="title" @input="searchTmdb()" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., Blade Runner">
+
+              <!-- Search results dropdown -->
+              <template x-if="searchResults.length > 0 && !selectedMovie">
+                <div class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-80 overflow-y-auto">
+                  <template x-for="movie in searchResults" :key="movie.tmdbId">
+                    <button @click="selectSearchResult(movie)" class="w-full p-2 flex items-center gap-3 hover:bg-gray-50 border-b last:border-b-0 text-left">
+                      <img x-show="movie.posterUrl" :src="movie.posterUrl" class="w-10 h-15 object-cover rounded" :alt="movie.title">
+                      <div x-show="!movie.posterUrl" class="w-10 h-15 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">No img</div>
+                      <div class="flex-1 min-w-0">
+                        <div class="font-medium text-gray-900 truncate" x-text="movie.title"></div>
+                        <div class="text-sm text-gray-500" x-text="movie.year || 'Unknown year'"></div>
+                      </div>
+                    </button>
+                  </template>
+                </div>
+              </template>
+
+              <!-- Searching indicator -->
+              <template x-if="searching">
+                <div class="absolute right-3 top-8 text-gray-400">
+                  <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                  </svg>
+                </div>
+              </template>
+            </div>
+
+            <!-- No API key hint -->
+            <template x-if="!hasApiKey && title.length > 2 && !selectedMovie">
+              <p class="text-sm text-gray-500">Add your TMDB API key in Settings to see movie posters and search suggestions.</p>
+            </template>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Year (optional)</label>
-              <input type="number" x-model="year" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 1982">
+              <input type="number" x-model="year" @input="searchTmdb()" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 1982">
             </div>
 
             <div>
@@ -257,9 +309,17 @@
 
             <div class="space-y-3">
               <template x-for="movie in appState.movies" :key="movie.id">
-                <button @click="selectMovie(movie.id)" class="w-full bg-white rounded-lg shadow p-4 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500">
-                  <span class="font-medium text-gray-900" x-text="movie.title"></span>
-                  <span class="text-gray-500 ml-2" x-text="movie.year ? '(' + movie.year + ')' : ''"></span>
+                <button @click="selectMovie(movie.id)" class="w-full bg-white rounded-lg shadow p-4 text-left hover:shadow-md transition border-2 border-transparent hover:border-indigo-500 flex items-center gap-4">
+                  <template x-if="movie.posterPath">
+                    <img :src="'https://image.tmdb.org/t/p/w92' + movie.posterPath" class="w-12 h-18 object-cover rounded shadow" :alt="movie.title">
+                  </template>
+                  <template x-if="!movie.posterPath">
+                    <div class="w-12 h-18 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs shrink-0">No poster</div>
+                  </template>
+                  <div>
+                    <span class="font-medium text-gray-900" x-text="movie.title"></span>
+                    <span class="text-gray-500 ml-2" x-text="movie.year ? '(' + movie.year + ')' : ''"></span>
+                  </div>
                 </button>
               </template>
             </div>
@@ -403,7 +463,7 @@
                     </div>
                   </template>
                   <template x-if="pattern.validated === true">
-                    <span class="px-3 py-1 text-sm bg-green-100 text-green-700 rounded">✓ Confirmed</span>
+                    <span class="px-3 py-1 text-sm bg-green-100 text-green-700 rounded">Confirmed</span>
                   </template>
                   <template x-if="pattern.validated === false">
                     <span class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded">Reconsidering...</span>
@@ -418,7 +478,7 @@
 
     <!-- Settings Page -->
     <template x-if="!loading && page === 'settings'">
-      <div x-data="settingsPanel()">
+      <div x-data="settingsPanel()" x-init="init()">
         <h1 class="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
 
         <template x-if="message">
@@ -430,6 +490,25 @@
         </template>
 
         <div class="bg-white rounded-lg shadow divide-y">
+          <!-- TMDB API Key -->
+          <div class="p-6">
+            <h3 class="font-medium text-gray-900 mb-2">TMDB API Key</h3>
+            <p class="text-sm text-gray-600 mb-4">Add your free TMDB API key to enable movie posters and search. Get one at <a href="https://www.themoviedb.org/settings/api" target="_blank" class="text-indigo-600 hover:underline">themoviedb.org</a></p>
+            <div class="flex gap-2">
+              <div class="relative flex-1">
+                <input :type="tmdbKeyVisible ? 'text' : 'password'" x-model="tmdbApiKey" class="w-full border rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-indigo-500" placeholder="Enter your API key">
+                <button @click="tmdbKeyVisible = !tmdbKeyVisible" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <span x-show="!tmdbKeyVisible">Show</span>
+                  <span x-show="tmdbKeyVisible">Hide</span>
+                </button>
+              </div>
+              <button @click="saveTmdbKey()" :disabled="savingKey" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
+                <span x-show="!savingKey">Save</span>
+                <span x-show="savingKey">Saving...</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Export -->
           <div class="p-6">
             <h3 class="font-medium text-gray-900 mb-2">Export Data</h3>

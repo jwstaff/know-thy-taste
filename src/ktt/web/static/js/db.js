@@ -22,6 +22,8 @@ async function saveMovie(movie) {
     year: movie.year || null,
     genres: movie.genres || [],
     watchContext: movie.watchContext || null,
+    posterPath: movie.posterPath || null,
+    tmdbId: movie.tmdbId || null,
     createdAt: now,
     lastAnalyzed: null,
   });

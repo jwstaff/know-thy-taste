@@ -52,6 +52,49 @@ function addMovieForm() {
     watchContext: 'home',
     saving: false,
     error: null,
+    // TMDB search
+    searchResults: [],
+    searching: false,
+    searchError: null,
+    selectedMovie: null,
+    hasApiKey: false,
+    searchTimeout: null,
+
+    async init() {
+      const key = await getTmdbApiKey();
+      this.hasApiKey = !!key;
+    },
+
+    async searchTmdb() {
+      if (!this.title.trim() || this.title.length < 2) {
+        this.searchResults = [];
+        return;
+      }
+
+      // Debounce
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(async () => {
+        this.searching = true;
+        this.searchError = null;
+
+        const { results, error } = await searchMovies(this.title, this.year || null);
+
+        this.searchResults = results;
+        this.searchError = error;
+        this.searching = false;
+      }, 300);
+    },
+
+    selectSearchResult(movie) {
+      this.selectedMovie = movie;
+      this.title = movie.title;
+      this.year = movie.year || '';
+      this.searchResults = [];
+    },
+
+    clearSelection() {
+      this.selectedMovie = null;
+    },
 
     async save() {
       if (!this.title.trim()) {
@@ -67,12 +110,16 @@ function addMovieForm() {
           title: this.title.trim(),
           year: this.year ? parseInt(this.year) : null,
           watchContext: this.watchContext,
+          posterPath: this.selectedMovie?.posterPath || null,
+          tmdbId: this.selectedMovie?.tmdbId || null,
         });
 
         // Reset form and go back
         this.title = '';
         this.year = '';
         this.watchContext = 'home';
+        this.selectedMovie = null;
+        this.searchResults = [];
 
         // Refresh and navigate
         await appState.refreshAll();
@@ -282,6 +329,29 @@ function settingsPanel() {
     importFile: null,
     message: null,
     messageType: null,
+    // TMDB
+    tmdbApiKey: '',
+    tmdbKeyVisible: false,
+    savingKey: false,
+
+    async init() {
+      const key = await getTmdbApiKey();
+      this.tmdbApiKey = key || '';
+    },
+
+    async saveTmdbKey() {
+      this.savingKey = true;
+      try {
+        await setTmdbApiKey(this.tmdbApiKey.trim());
+        this.message = this.tmdbApiKey.trim() ? 'TMDB API key saved!' : 'TMDB API key removed';
+        this.messageType = 'success';
+      } catch (err) {
+        this.message = 'Failed to save API key';
+        this.messageType = 'error';
+      } finally {
+        this.savingKey = false;
+      }
+    },
 
     async exportData() {
       this.exporting = true;
